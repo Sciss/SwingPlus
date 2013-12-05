@@ -6,13 +6,13 @@ SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.
 
 ## requirements / installation
 
-This project currently compiles against Scala 2.10 using sbt 0.12.
+This project currently compiles against Scala 2.10 using sbt 0.13.
 
 To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.0.+"`
+The current version `v` is `"0.0.2+"`
 
 ## related
 
