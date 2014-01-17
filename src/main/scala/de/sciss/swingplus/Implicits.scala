@@ -1,7 +1,6 @@
 package de.sciss.swingplus
 
-import scala.swing.{Component, Frame, UIElement}
-import scala.swing.Action
+import scala.swing.{ListView, Component, Frame, UIElement, Action}
 import java.awt.{event => jawte}
 import javax.{swing => js}
 
@@ -10,26 +9,6 @@ object Implicits {
     def defaultCloseOperation        : CloseOperation         = CloseOperation(f.peer.getDefaultCloseOperation)
     def defaultCloseOperation_=(value: CloseOperation): Unit  = f.peer.setDefaultCloseOperation(value.id)
   }
-
-  //  private final class ClientProps(peer: js.JComponent) extends mutable.Map[String, Any] {
-  //    def get(key: String): Option[Any] = Option(peer.getClientProperty(key))
-  //
-  //    def +=(kv: (String, Any)): this.type = {
-  //      peer.putClientProperty(kv._1, kv._2)
-  //      this
-  //    }
-  //
-  //    def -=(key: String): this.type = {
-  //      peer.putClientProperty(key, null)
-  //      this
-  //    }
-  //
-  //    def iterator: Iterator[(String, Any)] = {
-  //      val f = peer.getClass.getDeclaredField("clientProperties")
-  //      f.setAccessible(true)
-  //      val table = f.get(peer).asInstanceOf[js.ArrayTable]
-  //    }
-  //  }
 
   implicit final class SwingPlusUIElement(val ui: UIElement) extends AnyVal {
     def width : Int = ui.peer.getWidth
@@ -44,10 +23,14 @@ object Implicits {
     def baseline(width: Int, height:Int): Int = component.peer.getBaseline(width, height)
 
     def clientProps: ClientProperties = new ClientProperties(component)
+  }
 
-    //    def putClientProperty   (key: String, value: Any): Unit   = component.peer.putClientProperty(key, value)
-    //    def removeClientProperty(key: String)            : Unit   = component.peer.putClientProperty(key, null )
-    //    def getClientProperty   (key: String): Option[Any] = Option(component.peer.getClientProperty(key))
+  implicit final class SwingPlusListView[A](val component: ListView[A]) extends AnyVal {
+    import component.peer
+    def dragEnabled        : Boolean               = peer.getDragEnabled
+    def dragEnabled_=(value: Boolean): Unit        = peer.setDragEnabled(value)
+    def dropMode           : DropMode.Value        = peer.getDropMode // DropMode(peer.getDropMode.ordinal())
+    def dropMode_=   (value: DropMode.Value): Unit = peer.setDropMode(value) // (javax.swing.DropMode.values()(value.id))
   }
 
   private final class ActionWrap(peer0: js.Action) extends Action(null) {
