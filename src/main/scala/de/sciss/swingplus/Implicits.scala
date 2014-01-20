@@ -29,8 +29,8 @@ object Implicits {
     import component.peer
     def dragEnabled        : Boolean               = peer.getDragEnabled
     def dragEnabled_=(value: Boolean): Unit        = peer.setDragEnabled(value)
-    def dropMode           : DropMode.Value        = peer.getDropMode // DropMode(peer.getDropMode.ordinal())
-    def dropMode_=   (value: DropMode.Value): Unit = peer.setDropMode(value) // (javax.swing.DropMode.values()(value.id))
+    def dropMode           : DropMode.Value        = peer.getDropMode
+    def dropMode_=   (value: DropMode.Value): Unit = peer.setDropMode(value)
   }
 
   private final class ActionWrap(peer0: js.Action) extends Action(null) {

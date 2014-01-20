@@ -2,16 +2,15 @@ package de.sciss.swingplus
 
 import javax.swing.{DropMode => JDropMode}
 
-object DropMode /* extends Enumeration */ {
-//  val UseSelection, On, Insert, InsertRows, InsertCols, OnOrInsert, OnOrInsertRows, OnOrInsertCols = Value
+object DropMode {
   val UseSelection    = JDropMode.USE_SELECTION
-  val On              = JDropMode.USE_SELECTION
-  val Insert          = JDropMode.USE_SELECTION
-  val InsertRows      = JDropMode.USE_SELECTION
-  val InsertCols      = JDropMode.USE_SELECTION
-  val OnOrInsert      = JDropMode.USE_SELECTION
-  val OnOrInsertRows  = JDropMode.USE_SELECTION
-  val OnOrInsertCols  = JDropMode.USE_SELECTION
+  val On              = JDropMode.ON
+  val Insert          = JDropMode.INSERT
+  val InsertRows      = JDropMode.INSERT_ROWS
+  val InsertCols      = JDropMode.INSERT_COLS
+  val OnOrInsert      = JDropMode.ON_OR_INSERT
+  val OnOrInsertRows  = JDropMode.ON_OR_INSERT_ROWS
+  val OnOrInsertCols  = JDropMode.ON_OR_INSERT_COLS
 
   type Value = JDropMode
 }
