@@ -16,7 +16,7 @@ The current version `v` is `"0.1.+"`
 
 ## related
 
-Please also check out the [ScalaSwingContrib](https://github.com/benhutchison/ScalaSwingContrib) project which has similar goals. SwingPlus doesn't implement anything that's covered by ScalaSwingContrib and will probably inject its contributions to that project at some point. At the moment I'm overworked and I need rapid update access to this codebase, so I cannot deal with a collaborative project right now, but eventually I will.
+Please also check out the [ScalaSwingContrib](https://github.com/benhutchison/ScalaSwingContrib) project which has similar goals.
 
 Also check out the [TreeTable](https://github.com/Sciss/TreeTable) project which provides a very powerful component, combining tree and table. Ideally this will also go into the mix, but API needs to be properly developed and should negotiate common interface with Ken Scambler's tree implementation.
 

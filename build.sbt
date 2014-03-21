@@ -1,10 +1,12 @@
 name         := "SwingPlus"
 
-version      := "0.1.0"
+version      := "0.1.1-SNAPSHOT"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.11.0-RC3"
+
+crossScalaVersions := Seq("2.11.0-RC3", "2.10.4")
 
 description  := "The missing bits for Scala-Swing (additional components and methods)"
 
@@ -16,10 +18,15 @@ initialCommands in console :=
   """import de.sciss.swingplus._
     |import scala.swing._""".stripMargin
 
-libraryDependencies in ThisBuild +=
-  "org.scala-lang" % "scala-swing" % scalaVersion.value
+libraryDependencies in ThisBuild += {
+  val sv = scalaVersion.value
+  if (sv startsWith "2.10")
+    "org.scala-lang" % "scala-swing" % sv
+  else
+    "org.scala-lang.modules" %% "scala-swing" % "1.0.1"
+}
 
-retrieveManaged := true
+// retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
