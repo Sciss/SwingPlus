@@ -1,18 +1,18 @@
-name         := "SwingPlus"
+name                := "SwingPlus"
 
-version      := "0.1.1-SNAPSHOT"
+version             := "0.1.1-SNAPSHOT"
 
-organization := "de.sciss"
+organization        := "de.sciss"
 
-scalaVersion := "2.11.0-RC3"
+scalaVersion        := "2.11.0-RC3"
 
-crossScalaVersions := Seq("2.11.0-RC3", "2.10.4")
+crossScalaVersions  := Seq("2.11.0-RC3", "2.10.4")
 
-description  := "The missing bits for Scala-Swing (additional components and methods)"
+description         := "The missing bits for Scala-Swing (additional components and methods)"
 
-homepage     := Some(url("https://github.com/Sciss/" + name.value))
+homepage            := Some(url("https://github.com/Sciss/" + name.value))
 
-licenses     := Seq("LGPL v3+" -> url("http://www.gnu.org/licenses/lgpl-3.0.txt"))
+licenses            := Seq("LGPL v3+" -> url("http://www.gnu.org/licenses/lgpl-3.0.txt"))
 
 initialCommands in console := 
   """import de.sciss.swingplus._

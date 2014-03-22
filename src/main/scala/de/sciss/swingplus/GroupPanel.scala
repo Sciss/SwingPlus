@@ -1,3 +1,16 @@
+/*
+ *  GroupPanel.scala
+ *  (SwingPlus)
+ *
+ *  Copyright (c) 2013-2014 Hanns Holger Rutz. All rights reserved.
+ *
+ *  This software is published under the GNU Lesser General Public License v3+
+ *
+ *
+ *  For further information, please contact Hanns Holger Rutz at
+ *  contact@sciss.de
+ */
+
 package de.sciss.swingplus
 
 import scala.swing.{Component, Panel}
@@ -5,6 +18,7 @@ import scala.swing.{Component, Panel}
 import javax.{swing => js}
 import language.implicitConversions
 import javax.swing.{LayoutStyle, GroupLayout}
+import scala.collection.generic.Growable
 
 /** A panel that uses [[javax.swing.GroupLayout]] to visually arrange its components.
   *
@@ -274,11 +288,48 @@ import javax.swing.{LayoutStyle, GroupLayout}
   *
   * ==Mapping component sequences==
   *
-  * ...
+  * Often you will want to build panels from a sequence of components and arrange them in a grid.
+  * The `Seq.apply` and `Par.apply` methods take a sequence of `GroupPanel.Element` instances, and therefore
+  * you may have to explicitly convert them, as the implicit conversion does not kick in for collections.
+  * There are two possibilities, as demonstrated in the last example:
+  *
+  * {{{
+  * class Param(val check: CheckBox, val label: Label, val slider: Slider, val index: Spinner)
+  *
+  * val p1 = new Param(
+  *   new CheckBox,
+  *   new Label("Foo"),
+  *   new Slider { value = 10 },
+  *   new Spinner(new SpinnerNumberModel(10, 0, 100, 1))
+  * )
+  * val p2 = new Param(
+  *   new CheckBox { selected = true },
+  *   new Label("Bar"),
+  *   new Slider,
+  *   new Spinner(new SpinnerNumberModel(50, 0, 100, 1))
+  * )
+  * val params = List(p1, p2)
+  *
+  * horizontal = Seq(
+  *   Par(params.map(r => r.check: GroupPanel.Element): _*),
+  *   Par(params.map(r => r.label: GroupPanel.Element): _*),
+  *   new Par { params.foreach(r => contents += r.slider) },
+  *   new Par { params.foreach(r => contents += r.index ) }
+  * )
+  *
+  * vertical = Seq(
+  *   params.map { p =>
+  *     Par(Center)(p.check, p.label, p.slider, p.index)
+  *   }: _*
+  * )
+  * }}}
+  *
+  * As can be seen, the `Seq` and `Par` classes can be instantiated and then populated through
+  * calls to the `contents` member.
   *
   * @see javax.swing.GroupLayout
-  * @author Andreas Flierl
   * @author Hanns Holger Rutz
+  * @author Andreas Flierl
   */
 class GroupPanel extends Panel {
   import GroupPanel.{Element, Group, Alignment, Placement}
@@ -298,7 +349,7 @@ class GroupPanel extends Panel {
   
   def horizontal_=(value: Group): Unit = {
     _horizontalGroup = value
-    layout.setHorizontalGroup(value.build(layout))
+    layout.setHorizontalGroup(value.peer) // (value.build(layout))
   }
 
   def vertical: Group = if (_verticalGroup != null) _verticalGroup else
@@ -306,13 +357,13 @@ class GroupPanel extends Panel {
 
   def vertical_=(value: Group): Unit = {
     _verticalGroup = value
-    layout.setVerticalGroup(value.build(layout))
+    layout.setVerticalGroup(value.peer) // (value.build(layout))
   }
 
   // ---- useful "imports" ----
 
-  protected def Seq       = GroupPanel.Seq
-  protected def Par       = GroupPanel.Par
+  // protected def Seq       = GroupPanel.Seq
+  // protected def Par       = GroupPanel.Par
 
   protected def Leading   = Alignment.Leading
   protected def Trailing  = Alignment.Trailing
@@ -393,28 +444,67 @@ class GroupPanel extends Panel {
     */
   def replace(existing: Component, replacement: Component): Unit =
     layout.replace(existing.peer, replacement.peer)
+
+  // ---- inner classes ----
+
+  object Seq {
+    def apply(elems: Element.Seq*): Seq = {
+      val res = new Seq
+      res.contents ++= elems
+      res
+    }
+  }
+  class Seq extends Group {
+    lazy val peer: GroupLayout#SequentialGroup = layout.createSequentialGroup
+
+    object contents extends Growable[Element.Seq] {
+      def +=(elem: Element.Seq): this.type = {
+        elem.add(layout, peer)
+        this
+      }
+
+      def clear(): Unit = throw new NotImplementedError()
+    }
+  }
+
+  object Par {
+    def apply(elems: Element.Par*): Par = apply(Alignment.Leading)(elems: _*)
+
+    def apply(alignment: Alignment)(elems: Element.Par*): Par = apply(alignment, resizable = true)(elems: _*)
+
+    def apply(alignment: Alignment, resizable: Boolean)(elems: Element.Par*): Par = {
+      val res = new Par(alignment, resizable = resizable)
+      res.contents ++= elems
+      res
+    }
+  }
+  class Par(alignment: Alignment, resizable: Boolean) extends Group {
+    def this(alignment: Alignment) {
+      this(alignment, true)
+    }
+
+    def this() {
+      this(Alignment.Leading)
+    }
+
+    lazy val peer: GroupLayout#ParallelGroup = layout.createParallelGroup(alignment, resizable)
+
+    object contents extends Growable[Element.Par] {
+      def +=(elem: Element.Par): this.type = {
+        elem.add(layout, peer)
+        this
+      }
+
+      def clear(): Unit = throw new NotImplementedError()
+    }
+  }
 }
 object GroupPanel {
-  object Seq {
-    def apply(elems: Element.Seq*): Group = new SeqImpl(elems)
-    // def apply(comps: Component  *): Group = ??? // apply(comps.map(Element.apply))
-  }
-  object Par {
-    def apply(elems: Element.Par*): Group = new ParImpl(elems, Alignment.Leading, true)
-    // def apply(comps: Seq[Component]): Group = ??? // apply(comps.map(Element.apply))
+  sealed trait Group extends Element {
+    def peer: GroupLayout#Group
+    def contents: Growable[Element]
 
-    def apply(alignment: Alignment)(elems: Element*  ): Group = new ParImpl(elems, alignment, true)
-    // def apply(alignment: Alignment, comps: Seq[Component]): Group = ??? // apply(alignment)(comps.map(Element.apply))
-
-    def apply(alignment: Alignment, resizable: Boolean)(elems: Element*): Group =
-      new ParImpl(elems, alignment, resizable = resizable)
-
-    // def apply(alignment: Alignment, resizable: Boolean, comps: Seq[Component]): Group =
-    // ??? // apply(alignment, resizable)(comps.map(Element.apply))
-  }
-
-  trait Group extends Element {
-    private[GroupPanel] def build(layout: GroupLayout): GroupLayout#Group
+    private[GroupPanel] def add(layout: GroupLayout, parent: GroupLayout#Group): Unit = parent.addGroup(peer)
   }
 
   object Element {
@@ -561,51 +651,5 @@ object GroupPanel {
     } { sz =>
       parent.addComponent(c.peer, sz.min, sz.pref, sz.max)
     }
-  }
-
-  private[this] sealed trait GroupImpl extends Group {
-    protected def createGroup(layout: GroupLayout): GroupLayout#Group
-
-    def add(layout: GroupLayout, parent: GroupLayout#Group): Unit = parent.addGroup(build(layout))
-  }
-
-  private[this] final class SeqImpl(elems: Seq[Element.Seq]) extends GroupImpl {
-    override def toString = s"Seq(${elems.mkString(", ")}"
-
-    def build(layout: GroupLayout): GroupLayout#Group = {
-      val jg = createGroup(layout)
-      elems.foreach(_.add(layout, jg))
-      jg
-    }
-
-    override protected def createGroup(layout: GroupLayout): GroupLayout#SequentialGroup =
-      layout.createSequentialGroup
-  }
-
-  private[this] final class ParImpl(elems: Seq[Element.Par],
-                                    alignment: Alignment, resizable: Boolean)
-    extends GroupImpl {
-
-    override def toString = {
-      val header = if (alignment == Alignment.Leading && resizable) "" else {
-        val alignStr = (alignment: @unchecked) match {  // scalac doesn't handle aliasing
-          case Alignment.Leading  => "Leading"
-          case Alignment.Center   => "Center"
-          case Alignment.Trailing => "Trailing"
-          case Alignment.Baseline => "Baseline"
-        }
-        if (resizable) s"($alignStr)" else s"($alignStr, resizable = false)"
-      }
-      s"Par$header(${elems.mkString(", ")}"
-    }
-
-    def build(layout: GroupLayout): GroupLayout#Group = {
-      val jg = createGroup(layout)
-      elems.foreach(_.add(layout, jg))
-      jg
-    }
-
-    override protected def createGroup(layout: GroupLayout): GroupLayout#ParallelGroup =
-      layout.createParallelGroup(alignment, resizable)
   }
 }

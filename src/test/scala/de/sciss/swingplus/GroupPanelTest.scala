@@ -3,6 +3,7 @@ package de.sciss.swingplus
 import scala.swing.{Slider, CheckBox, FlowPanel, Button, Component, MainFrame, TextField, Label, Frame, SimpleSwingApplication}
 import scala.annotation.switch
 import javax.swing.SpinnerNumberModel
+import scala.swing.event.{ValueChanged, ButtonClicked}
 
 object GroupPanelTest extends SimpleSwingApplication {
   private def mkEx(i: Int): Component = Button(i.toString) {
@@ -149,45 +150,66 @@ object GroupPanelTest extends SimpleSwingApplication {
     )
   }
 
-  private class Reduction(val norm: CheckBox, val nameLabel: Label, val slider: Slider, val index: Spinner,
-                          val valueLabel: Label)
 
   private def ex12(): Component = new GroupPanel {
-    val red1 = new Reduction(
+    class Param(val check: CheckBox, val label: Label, val slider: Slider, val index: Spinner) {
+      private def updateEnabled(): Unit = {
+        slider.enabled = check.selected
+        index.enabled  = check.selected
+      }
+
+      updateEnabled()
+      check.listenTo(check)
+      check.reactions += {
+        case ButtonClicked(_) => updateEnabled()
+      }
+
+      slider.listenTo(slider)
+      slider.reactions += {
+        case ValueChanged(_) =>
+          index.deafTo(index)
+          println(s"Slider ${slider.value}")
+          index.value = slider.value
+          index.listenTo(index)
+      }
+
+      index.listenTo(index)
+      index.reactions += {
+        case ValueChanged(_) => index.value match {
+          case i: Int =>
+            slider.deafTo(slider)
+            println(s"Index $i")
+            slider.value = i
+            slider.listenTo(slider)
+          case _ =>
+        }
+      }
+    }
+
+    val p1 = new Param(
       new CheckBox,
       new Label("Foo"),
-      new Slider,
-      new Spinner(new SpinnerNumberModel(10, 0, 100, 1)),
-      new Label("x")
+      new Slider { value = 10 },
+      new Spinner(new SpinnerNumberModel(10, 0, 100, 1))
     )
-    val red2 = new Reduction(
+    val p2 = new Param(
       new CheckBox { selected = true },
       new Label("Bar"),
-      new Slider { value = 50 },
-      new Spinner(new SpinnerNumberModel(50, 0, 100, 1)),
-      new Label("y")
+      new Slider,
+      new Spinner(new SpinnerNumberModel(50, 0, 100, 1))
     )
-    val red3 = new Reduction(
-      new CheckBox,
-      new Label("Blah Baz"),
-      new Slider { value = 100 },
-      new Spinner(new SpinnerNumberModel(100, 0, 150, 1)),
-      new Label("z")
-    )
-    val reds = List(red1, red2, red3)
+    val params = List(p1, p2)
 
-    ???
-//    horizontal = Seq(
-//      Par(reds.map(_.norm      ): _*),
-//      Par(reds.map(_.nameLabel ): _*),
-//      Par(reds.map(_.slider    ): _*),
-//      Par(reds.map(_.index     ): _*),
-//      Par(reds.map(_.valueLabel): _*)
-//    )
+    horizontal = Seq(
+      Par(params.map(r => r.check: GroupPanel.Element): _*),
+      Par(params.map(r => r.label: GroupPanel.Element): _*),
+      new Par { params.foreach(r => contents += r.slider) },
+      new Par { params.foreach(r => contents += r.index ) }
+    )
 
     vertical = Seq(
-      reds.map { r =>
-        Par(Center)(r.norm, r.nameLabel, r.slider, r.index, r.valueLabel)
+      params.map { p =>
+        Par(Center)(p.check, p.label, p.slider, p.index)
       }: _*
     )
   }
