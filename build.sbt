@@ -4,7 +4,7 @@ version             := "0.1.1-SNAPSHOT"
 
 organization        := "de.sciss"
 
-scalaVersion        := "2.11.0-RC3"
+scalaVersion        := "2.10.4"
 
 crossScalaVersions  := Seq("2.11.0-RC3", "2.10.4")
 
