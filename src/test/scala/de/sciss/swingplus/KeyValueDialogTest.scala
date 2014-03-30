@@ -1,11 +1,20 @@
 package de.sciss.swingplus
 
-import scala.swing.{Slider, SwingApplication, Dialog, Alignment, Label, TextField, Component}
+import scala.swing.{SwingApplication, Dialog, Alignment, Label, TextField, Component}
 import scala.swing.Swing.EmptyIcon
+import javax.swing.UIManager
+import java.awt.Font
 
 object KeyValueDialogTest extends SwingApplication {
   def startup(args: Array[String]): Unit = {
-    val value = new Slider
+    UIManager.getInstalledLookAndFeels.find(_.getName contains "GTK+").foreach { info =>
+      UIManager.setLookAndFeel(info.getClassName)
+    }
+
+    // somehow the slider doesn't yield correct baseline information?
+    // val value = new Slider
+    val value = new TextField("Foo")
+    value.font = new Font("Serif", Font.BOLD, 24)
     val res   = keyValueDialog(value)
     println(res)
   }

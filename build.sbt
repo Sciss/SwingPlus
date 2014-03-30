@@ -1,6 +1,6 @@
 name                := "SwingPlus"
 
-version             := "0.1.1-SNAPSHOT"
+version             := "0.1.1"
 
 organization        := "de.sciss"
 
@@ -26,7 +26,7 @@ libraryDependencies in ThisBuild += {
     "org.scala-lang.modules" %% "scala-swing" % "1.0.1"
 }
 
-// retrieveManaged := true
+retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 

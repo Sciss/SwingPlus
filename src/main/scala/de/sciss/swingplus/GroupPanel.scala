@@ -343,7 +343,16 @@ class GroupPanel extends Panel {
 
   private[this] var _horizontalGroup: Group = null
   private[this] var _verticalGroup  : Group = null
-  
+
+    /** This method is needed for implicit resolution in Scala 2.10 due to some bug (?).
+      * It is not needed any more for Scala 2.11
+      */
+  protected implicit def wrapSeq(c: Component): Element.Seq = Element(c)
+  /** This method is needed for implicit resolution in Scala 2.10 due to some bug (?).
+    * It is not needed any more for Scala 2.11
+    */
+  protected implicit def wrapPar(c: Component): Element.Par = Element(c)
+
   def horizontal: Group = if (_horizontalGroup != null) _horizontalGroup else
     throw new IllegalStateException("Horizontal group has not been assigned yet")
   
