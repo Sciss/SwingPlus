@@ -4,9 +4,9 @@ version             := "0.1.1"
 
 organization        := "de.sciss"
 
-scalaVersion        := "2.10.4"
+scalaVersion        := "2.11.0"
 
-crossScalaVersions  := Seq("2.11.0-RC3", "2.10.4")
+crossScalaVersions  := Seq("2.11.0", "2.10.4")
 
 description         := "The missing bits for Scala-Swing (additional components and methods)"
 
@@ -28,7 +28,7 @@ libraryDependencies in ThisBuild += {
 
 retrieveManaged := true
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture")
 
 // ---- publishing ----
 

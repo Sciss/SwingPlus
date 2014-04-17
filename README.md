@@ -8,7 +8,7 @@ SwingPlus is (C)opyright 2013&ndash;2014 Hanns Holger Rutz and released under th
 
 ## requirements / installation
 
-This project currently compiles against Scala 2.10 using sbt 0.13.
+This project currently compiles against Scala 2.11, 2.10 using sbt 0.13.
 
 To use the library in your project:
 
