@@ -2,9 +2,9 @@
 
 ## statement
 
-SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.width` and `.height` methods to missing components such as `Spinner` to additional components such `GroupPanel.
+SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.width` and `.height` methods to missing components such as `Spinner` to additional components such `GroupPanel`.
 
-SwingPlus is (C)opyright 2013&ndash;2014 Hanns Holger Rutz and released under the [GNU Lesser General Public License](https://raw.github.com/Sciss/SwingPlus/master/LICENSE) v3+ and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
+SwingPlus is (C)opyright 2013&ndash;2014 Hanns Holger Rutz and released under the [GNU Lesser General Public License](https://raw.github.com/Sciss/SwingPlus/master/LICENSE) v2.1+ and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
 
 ## requirements / installation
 
@@ -14,7 +14,7 @@ To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.1.1+"`
+The current version `v` is `"0.1.2+"`
 
 ## related
 

@@ -1,6 +1,6 @@
 name                := "SwingPlus"
 
-version             := "0.1.1"
+version             := "0.1.2"
 
 organization        := "de.sciss"
 
@@ -12,7 +12,7 @@ description         := "The missing bits for Scala-Swing (additional components 
 
 homepage            := Some(url("https://github.com/Sciss/" + name.value))
 
-licenses            := Seq("LGPL v3+" -> url("http://www.gnu.org/licenses/lgpl-3.0.txt"))
+licenses            := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt"))
 
 initialCommands in console := 
   """import de.sciss.swingplus._
