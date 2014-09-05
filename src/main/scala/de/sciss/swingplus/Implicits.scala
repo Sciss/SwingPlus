@@ -13,7 +13,7 @@
 
 package de.sciss.swingplus
 
-import scala.swing.{ListView, Component, Frame, UIElement, Action}
+import scala.swing.{Component, Frame, UIElement, Action}
 import java.awt.{event => jawte}
 import javax.{swing => js}
 
@@ -38,13 +38,13 @@ object Implicits {
     def clientProps: ClientProperties = new ClientProperties(component)
   }
 
-  implicit final class SwingPlusListView[A](val component: ListView[A]) extends AnyVal {
-    import component.peer
-    def dragEnabled        : Boolean               = peer.getDragEnabled
-    def dragEnabled_=(value: Boolean): Unit        = peer.setDragEnabled(value)
-    def dropMode           : DropMode.Value        = peer.getDropMode
-    def dropMode_=   (value: DropMode.Value): Unit = peer.setDropMode(value)
-  }
+  //  implicit final class SwingPlusListView[A](val component: ListView[A]) extends AnyVal {
+  //    import component.peer
+  //    def dragEnabled        : Boolean               = peer.getDragEnabled
+  //    def dragEnabled_=(value: Boolean): Unit        = peer.setDragEnabled(value)
+  //    def dropMode           : DropMode.Value        = peer.getDropMode
+  //    def dropMode_=   (value: DropMode.Value): Unit = peer.setDropMode(value)
+  //  }
 
   private final class ActionWrap(peer0: js.Action) extends Action(null) {
     override lazy val peer: js.Action = peer0

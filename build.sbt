@@ -1,12 +1,12 @@
 name                := "SwingPlus"
 
-version             := "0.1.2"
+version             := "0.2.0-SNAPSHOT"
 
 organization        := "de.sciss"
 
-scalaVersion        := "2.11.0"
+scalaVersion        := "2.11.2"
 
-crossScalaVersions  := Seq("2.11.0", "2.10.4")
+crossScalaVersions  := Seq("2.11.2", "2.10.4")
 
 description         := "The missing bits for Scala-Swing (additional components and methods)"
 
@@ -28,14 +28,14 @@ libraryDependencies in ThisBuild += {
 
 retrieveManaged := true
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture")
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture")
 
 // ---- publishing ----
 
 publishMavenStyle := true
 
 publishTo :=
-  Some(if (version.value endsWith "-SNAPSHOT")
+  Some(if (isSnapshot.value)
     "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
   else
     "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
