@@ -13,22 +13,28 @@
 
 package de.sciss.swingplus
 
-import scala.swing.{Component, Frame, UIElement, Action}
+import javax.swing.{SortOrder, RowSorter}
+
+import scala.swing.{Table, Component, Frame, UIElement, Action}
 import java.awt.{event => jawte}
 import javax.{swing => js}
 
+/** Contains various extension methods for existing Swing components. */
 object Implicits {
-  implicit final class SwingPlusFrame(val f: Frame) extends AnyVal {
+  implicit final class SwingPlusFrame(val `this`: Frame) extends AnyVal { me =>
+    import me.{`this` => f}
     def defaultCloseOperation        : CloseOperation         = CloseOperation(f.peer.getDefaultCloseOperation)
     def defaultCloseOperation_=(value: CloseOperation): Unit  = f.peer.setDefaultCloseOperation(value.id)
   }
 
-  implicit final class SwingPlusUIElement(val ui: UIElement) extends AnyVal {
+  implicit final class SwingPlusUIElement(val `this`: UIElement) extends AnyVal { me =>
+    import me.{`this` => ui}
     def width : Int = ui.peer.getWidth
     def height: Int = ui.peer.getHeight
   }
 
-  implicit final class SwingPlusComponent(val component: Component) extends AnyVal {
+  implicit final class SwingPlusComponent(val `this`: Component) extends AnyVal { me =>
+    import me.{`this` => component}
     def baseline: Int = {
       val p = component.peer
       baseline(p.getWidth, p.getHeight)
@@ -38,13 +44,20 @@ object Implicits {
     def clientProps: ClientProperties = new ClientProperties(component)
   }
 
-  //  implicit final class SwingPlusListView[A](val component: ListView[A]) extends AnyVal {
-  //    import component.peer
-  //    def dragEnabled        : Boolean               = peer.getDragEnabled
-  //    def dragEnabled_=(value: Boolean): Unit        = peer.setDragEnabled(value)
-  //    def dropMode           : DropMode.Value        = peer.getDropMode
-  //    def dropMode_=   (value: DropMode.Value): Unit = peer.setDropMode(value)
-  //  }
+  implicit final class SwingPlusTable(val `this`: Table) extends AnyVal { me =>
+    import me.{`this` => table}
+
+    /** Programmatically sets the sorted column of the table view. */
+    def sort(column: Int, ascending: Boolean = true): Unit = {
+      val sorter = table.peer.getRowSorter
+      if (sorter != null) {
+        val list = new java.util.ArrayList[RowSorter.SortKey](1)
+        list.add(new RowSorter.SortKey(column, if (ascending) SortOrder.ASCENDING else SortOrder.DESCENDING))
+        sorter.setSortKeys(list)
+        // sorter.asInstanceOf[DefaultRowSorter].sort()
+      }
+    }
+  }
 
   private final class ActionWrap(peer0: js.Action) extends Action(null) {
     override lazy val peer: js.Action = peer0
@@ -53,7 +66,7 @@ object Implicits {
     def apply(): Unit = peer.actionPerformed(new jawte.ActionEvent(this, jawte.ActionEvent.ACTION_PERFORMED, ""))
   }
 
-  implicit final class SwingPlusActionType(val self: Action.type) extends AnyVal {
+  implicit final class SwingPlusActionType(val `this`: Action.type) extends AnyVal {
     def wrap(peer: javax.swing.Action): Action = new ActionWrap(peer)
   }
 }

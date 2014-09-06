@@ -1,8 +1,22 @@
+/*
+ *  ListView.scala
+ *  (SwingPlus)
+ *
+ *  Copyright (c) 2013-2014 Hanns Holger Rutz. All rights reserved.
+ *
+ *  This software is published under the GNU Lesser General Public License v2.1+
+ *
+ *
+ *  For further information, please contact Hanns Holger Rutz at
+ *  contact@sciss.de
+ */
+
 // This is a version of the original Scala-Swing class, adapted to
 // compile under Java 7, and capable of being used in projects that
 // compile with either Java 6 and 7. In other words, the idiotic
 // generification of Java-Swing under Java 7 is hidden. The code
-// has further been cleaned up.
+// has further been cleaned up, the API made more regular, and
+// a proper Model type has been introduced.
 
 package de.sciss.swingplus
 
@@ -15,7 +29,7 @@ package de.sciss.swingplus
 \*                                                                      */
 
 import javax.swing.event.{ListSelectionListener, ListDataEvent, ListDataListener}
-import javax.swing.{JLabel, DefaultListCellRenderer, AbstractListModel, JList, ListCellRenderer, JComponent, ListSelectionModel}
+import javax.swing.{ListModel, JLabel, DefaultListCellRenderer, AbstractListModel, JList, ListCellRenderer, JComponent, ListSelectionModel}
 
 import de.sciss.swingplus.event.{ListSelectionChanged, ListElementsAdded, ListElementsRemoved, ListChanged}
 
@@ -53,7 +67,7 @@ object ListView {
 
       def update(n: Int, newElem: A): Unit = if (peer(n) != newElem) {
         peer.update(n, newElem)
-        publish(Model.Changed(m, n to n))
+        publish(Model.ElementsChanged(m, n to n))
       }
 
       def clear(): Unit = if (peer.nonEmpty) {
@@ -96,7 +110,7 @@ object ListView {
 
     // creates a Scala model from an existing underlying Java model
     private[ListView] final class FromJava[A](val peer: JComponent) extends Model[A] with LazyPublisher { m =>
-      private val pm = peer.asInstanceOf[JList[A]].getModel
+      private val pm: ListModel[A] = peer.asInstanceOf[JList[A]].getModel
 
       override def toString() = s"ListView.Model@${hashCode().toHexString}"
 
@@ -113,7 +127,7 @@ object ListView {
       }
 
       private[this] lazy val l: ListDataListener = new ListDataListener {
-        def contentsChanged(e: ListDataEvent): Unit = m.publish(Model.Changed        (m, e.getIndex0 to e.getIndex1))
+        def contentsChanged(e: ListDataEvent): Unit = m.publish(Model.ElementsChanged(m, e.getIndex0 to e.getIndex1))
         def intervalRemoved(e: ListDataEvent): Unit = m.publish(Model.ElementsRemoved(m, e.getIndex0 to e.getIndex1))
         def intervalAdded  (e: ListDataEvent): Unit = m.publish(Model.ElementsAdded  (m, e.getIndex0 to e.getIndex1))
       }
@@ -128,7 +142,7 @@ object ListView {
       def getSize: Int = peer.length
 
       peer.reactions += {
-        case Model.Changed        (m, range) => fireContentsChanged(m, range.start, range.last)
+        case Model.ElementsChanged(m, range) => fireContentsChanged(m, range.start, range.last)
         case Model.ElementsAdded  (m, range) => fireIntervalAdded  (m, range.start, range.last)
         case Model.ElementsRemoved(m, range) => fireIntervalRemoved(m, range.start, range.last)
       }
@@ -141,7 +155,7 @@ object ListView {
       def range: Range
     }
 
-    final case class Changed        [+A](source: Model[A], range: Range) extends Change[A]
+    final case class ElementsChanged[+A](source: Model[A], range: Range) extends Change[A]
     final case class ElementsAdded  [+A](source: Model[A], range: Range) extends Change[A]
     final case class ElementsRemoved[+A](source: Model[A], range: Range) extends Change[A]
   }
@@ -287,13 +301,13 @@ class ListView[A] extends Component {
 
   def this(items: Seq[A]) = {
     this()
-    listData = items
+    this.items = items
   }
 
   private[this] var _model: Model[A] = null
 
   private[this] val modelListener: Reaction = {
-    case Model.Changed        (_, _    )  => publish(ListChanged        (ListView.this       ))
+    case Model.ElementsChanged(_, _    )  => publish(ListChanged        (ListView.this       ))
     case Model.ElementsAdded  (_, range)  => publish(ListElementsRemoved(ListView.this, range))
     case Model.ElementsRemoved(_, range)  => publish(ListElementsAdded  (ListView.this, range))
   }
@@ -320,14 +334,14 @@ class ListView[A] extends Component {
     publish(ListChanged(ListView.this))
   }
 
-  def listData: Seq[A] = model match {
+  def items: Seq[A] = model match {
     case mw: Model.Wrapped[A] => mw.items
     case m => m
   }
 
-  def listData_=(items: Seq[A]): Unit = model = items match {
+  def items_=(xs: Seq[A]): Unit = model = xs match {
     case m: Model[A] => m
-    case _ => Model.wrap(items)
+    case _ => Model.wrap(xs)
   }
 
   /** The current item selection. */

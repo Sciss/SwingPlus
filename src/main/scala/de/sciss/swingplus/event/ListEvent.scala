@@ -1,4 +1,6 @@
-// as Scala-Swing, but using our own ListView
+// Same as Scala-Swing, but using our own ListView.
+// In the long term, something like `ListView.ElementedChanged`
+// would be better and more coherent.
 
 package de.sciss.swingplus
 package event
