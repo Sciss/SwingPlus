@@ -1,12 +1,12 @@
 name                := "SwingPlus"
 
-version             := "0.2.0"
+version             := "0.2.1-SNAPSHOT"
 
 organization        := "de.sciss"
 
-scalaVersion        := "2.11.2"
+scalaVersion        := "2.11.5"
 
-crossScalaVersions  := Seq("2.11.2", "2.10.4")
+crossScalaVersions  := Seq("2.11.5", "2.10.4")
 
 description         := "The missing bits for Scala-Swing (additional components and methods)"
 
@@ -25,8 +25,6 @@ libraryDependencies in ThisBuild += {
   else
     "org.scala-lang.modules" %% "scala-swing" % "1.0.1"
 }
-
-retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture")
 
