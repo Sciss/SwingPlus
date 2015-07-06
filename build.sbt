@@ -1,12 +1,12 @@
 name                := "SwingPlus"
 
-version             := "0.2.1-SNAPSHOT"
+version             := "0.2.1"
 
 organization        := "de.sciss"
 
-scalaVersion        := "2.11.5"
+scalaVersion        := "2.11.7"
 
-crossScalaVersions  := Seq("2.11.5", "2.10.4")
+crossScalaVersions  := Seq("2.11.7", "2.10.5")
 
 description         := "The missing bits for Scala-Swing (additional components and methods)"
 
@@ -23,7 +23,7 @@ libraryDependencies in ThisBuild += {
   if (sv startsWith "2.10")
     "org.scala-lang" % "scala-swing" % sv
   else
-    "org.scala-lang.modules" %% "scala-swing" % "1.0.1"
+    "org.scala-lang.modules" %% "scala-swing" % "1.0.2"
 }
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture")
@@ -59,11 +59,8 @@ pomExtra := { val n = name.value
 
 // ---- ls.implicit.ly ----
 
-seq(lsSettings :_*)
-
-(LsKeys.tags   in LsKeys.lsync) := Seq("swing", "gui")
-
-(LsKeys.ghUser in LsKeys.lsync) := Some("Sciss")
-
-(LsKeys.ghRepo in LsKeys.lsync) := Some(name.value)
-
+// seq(lsSettings :_*)
+// 
+// (LsKeys.tags   in LsKeys.lsync) := Seq("swing", "gui")
+// (LsKeys.ghUser in LsKeys.lsync) := Some("Sciss")
+// (LsKeys.ghRepo in LsKeys.lsync) := Some(name.value)

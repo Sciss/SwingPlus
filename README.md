@@ -1,5 +1,8 @@
 # SwingPlus
 
+[![Build Status](https://travis-ci.org/Sciss/SwingPlus.svg?branch=master)](https://travis-ci.org/Sciss/SwingPlus)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.11)
+
 ## statement
 
 SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.width` and `.height` methods to missing components such as `Spinner` to additional components such `GroupPanel`. It also fixes the incompatibility of certain components with Java 7.
@@ -16,7 +19,7 @@ To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.2.0"`
+The current version `v` is `"0.2.1"`
 
 To _compile_ the project, you must currently use JDK 7. This is because some Java Swing classes were retrofitted with generics, something that the Scala compiler chokes on when using JDK 6. Note however, that SwingPlus __can be used both under JDK 6 and JDK7__ (that is the entire point of providing our own versions of `ComboBox` and `ListView`).
 
