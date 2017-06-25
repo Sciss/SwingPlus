@@ -13,9 +13,9 @@
 
 package de.sciss.swingplus
 
-import javax.swing.{SortOrder, RowSorter}
+import javax.swing.{RowSorter, SortOrder}
 
-import scala.swing.{Table, Component, Frame, UIElement, Action}
+import scala.swing.{AbstractButton, Action, ButtonGroup, Component, Frame, Table, UIElement}
 import java.awt.{event => jawte}
 import javax.{swing => js}
 
@@ -68,5 +68,16 @@ object Implicits {
 
   implicit final class SwingPlusActionType(val `this`: Action.type) extends AnyVal {
     def wrap(peer: javax.swing.Action): Action = new ActionWrap(peer)
+  }
+
+  implicit final class SwingPlusButtonGroup(val `this`: ButtonGroup) extends AnyVal { me =>
+    import me.{`this` => bg}
+
+    def clearSelection(): Unit = bg.peer.clearSelection()
+
+    def selected_=(value: Option[AbstractButton]): Unit = value match {
+      case Some(b)  => bg.select(b)
+      case None     => clearSelection()
+    }
   }
 }

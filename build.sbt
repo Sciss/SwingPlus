@@ -1,14 +1,14 @@
 lazy val baseName  = "SwingPlus"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "0.2.2"
-lazy val mimaVersion    = "0.2.0"
+lazy val projectVersion = "0.2.3"
+lazy val mimaVersion    = "0.2.2"
 
 name                := baseName
 version             := projectVersion
 organization        := "de.sciss"
-scalaVersion        := "2.11.8"
-crossScalaVersions  := Seq("2.12.1", "2.11.8", "2.10.6")
+scalaVersion        := "2.12.2"
+crossScalaVersions  := Seq("2.12.2", "2.11.11", "2.10.6")
 description         := "The missing bits for Scala-Swing (additional components and methods)"
 homepage            := Some(url(s"https://github.com/Sciss/${name.value}"))
 licenses            := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt"))

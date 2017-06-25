@@ -23,13 +23,13 @@ import scala.swing.Swing
 class SpinnerComboBox[A](value0: A, minimum: A, maximum: A, step: A, items: Seq[A])(implicit num: Numeric[A])
   extends ComboBox[A](items) {
 
-  private val sm: AbstractSpinnerModel =
+  private[this] val sm: AbstractSpinnerModel =
     (value0.asInstanceOf[AnyRef], minimum.asInstanceOf[AnyRef], maximum.asInstanceOf[AnyRef], step.asInstanceOf[AnyRef]) match {
       case (n: Number, min: Comparable[_], max: Comparable[_], s: Number) =>
         new SpinnerNumberModel(n, min, max, s)
       case _ =>
         new AbstractSpinnerModel {
-          private var _value = value0
+          private[this] var _value = value0
 
           def getValue: AnyRef = _value.asInstanceOf[AnyRef]
           def setValue(value: Any): Unit = _value = value.asInstanceOf[A]
@@ -41,7 +41,9 @@ class SpinnerComboBox[A](value0: A, minimum: A, maximum: A, step: A, items: Seq[
 
   private def clip(in: A): A = num.max(minimum, num.min(maximum, in))
 
-  private val sp = new Spinner(sm)
+  private[this] val sp = new Spinner(sm)
+
+  def spinner: Spinner = sp
 
   private object editor extends ComboBox.Editor[A] {
     def component: swing.Component = sp
@@ -52,8 +54,9 @@ class SpinnerComboBox[A](value0: A, minimum: A, maximum: A, step: A, items: Seq[
     def startEditing(): Unit = comboBoxPeer.selectAll()
   }
 
-  def value: A          = sp.value.asInstanceOf[A]
-  def value_=(value: A) = sp.value = clip(value)
+  def value: A = sp.value.asInstanceOf[A]
+
+  def value_=(value: A): Unit = sp.value = clip(value)
 
   // ---- init ----
 
