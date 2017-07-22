@@ -46,7 +46,7 @@ object ListView {
   }
 
   def wrap[A](c: JComponent): ListView[A] = new ListView[A] {
-    override lazy val peer = c
+    override lazy val peer: JComponent = c
   }
 
   // ------------------------- Model-------------------------
@@ -72,7 +72,7 @@ object ListView {
 
       def clear(): Unit = if (peer.nonEmpty) {
         peer.clear()
-        publish(Model.ElementsRemoved(m, 0 until peer.size))
+        publish(Model.ElementsRemoved(m, peer.indices))
       }
 
       def remove(n: Int): A = {
@@ -203,7 +203,7 @@ object ListView {
     */
   abstract class Renderer[-A] {
     def peer: Any = new ListCellRenderer[A] {
-      def getListCellRendererComponent(list: JList[_ <: A], a: A, index: Int, isSelected: Boolean, focused: Boolean) =
+      def getListCellRendererComponent(list: JList[_ <: A], a: A, index: Int, isSelected: Boolean, focused: Boolean): JComponent =
         componentFor(ListView.wrap[A](list), isSelected, focused, a, index).peer
     }
 
@@ -304,7 +304,7 @@ class ListView[A] extends Component {
     this.items = items
   }
 
-  private[this] var _model: Model[A] = null
+  private[this] var _model: Model[A] = _
 
   private[this] val modelListener: Reaction = {
     case Model.ElementsChanged(_, _    )  => publish(ListChanged        (ListView.this       ))

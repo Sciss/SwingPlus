@@ -128,7 +128,7 @@ object ComboBox {
 
       val verifier: javax.swing.InputVerifier = new javax.swing.InputVerifier {
         // TODO: should chain with potentially existing verifier in editor
-        def verify(c: JComponent) = try {
+        def verify(c: JComponent): Boolean = try {
           value = string2A(c.asInstanceOf[JTextField].getText)
           true
         }
@@ -137,9 +137,9 @@ object ComboBox {
         }
       }
 
-      def textEditor = getEditorComponent.asInstanceOf[JTextField]
+      def textEditor: JTextField = getEditorComponent.asInstanceOf[JTextField]
       textEditor.setInputVerifier(verifier)
-      textEditor.addActionListener(Swing.ActionListener { a =>
+      textEditor.addActionListener(Swing.ActionListener { _ =>
         getItem() // make sure our value is updated
         textEditor.setText(a2String(value))
       })
@@ -192,7 +192,7 @@ object ComboBox {
       def clear(): Unit = if (peer.nonEmpty) {
         selectedItem = None
         peer.clear()
-        publish(Model.ElementsRemoved(m, 0 until peer.size))
+        publish(Model.ElementsRemoved(m, peer.indices))
       }
 
       def remove(n: Int): A = {
@@ -337,7 +337,7 @@ class ComboBox[A] extends Component with Publisher {
     this.items = items
   }
 
-  private[this] var _model: Model[A] = null
+  private[this] var _model: Model[A] = _
 
   //  private[this] val modelListener: Reaction = {
   //    case Model.ElementsChanged(_, _    )  => publish(ListChanged        (ListView.this       ))
@@ -384,7 +384,7 @@ class ComboBox[A] extends Component with Publisher {
     def item     : A          = peer.asInstanceOf[JComboBox[A]].getSelectedItem.asInstanceOf[A]
     def item_= (a: A  ): Unit = peer.asInstanceOf[JComboBox[A]].setSelectedItem(a)
 
-    peer.asInstanceOf[JComboBox[A]].addActionListener(Swing.ActionListener { e =>
+    peer.asInstanceOf[JComboBox[A]].addActionListener(Swing.ActionListener { _ =>
       publish(SelectionChanged(ComboBox.this))
     })
   }

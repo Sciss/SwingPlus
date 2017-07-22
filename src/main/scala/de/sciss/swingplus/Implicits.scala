@@ -15,7 +15,7 @@ package de.sciss.swingplus
 
 import javax.swing.{RowSorter, SortOrder}
 
-import scala.swing.{AbstractButton, Action, ButtonGroup, Component, Frame, Table, UIElement}
+import scala.swing.{AbstractButton, Action, ButtonGroup, Component, Frame, UIElement}
 import java.awt.{event => jawte}
 import javax.{swing => js}
 
@@ -44,7 +44,8 @@ object Implicits {
     def clientProps: ClientProperties = new ClientProperties(component)
   }
 
-  implicit final class SwingPlusTable(val `this`: Table) extends AnyVal { me =>
+  // XXX TODO -- remove in major version, as we use swingplus.Table now
+  implicit final class SwingPlusTable(val `this`: swing.Table) extends AnyVal { me =>
     import me.{`this` => table}
 
     /** Programmatically sets the sorted column of the table view. */

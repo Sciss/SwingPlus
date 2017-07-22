@@ -341,8 +341,8 @@ class GroupPanel extends Panel {
   autoGaps          = true
   autoContainerGaps = true
 
-  private[this] var _horizontalGroup: Group = null
-  private[this] var _verticalGroup  : Group = null
+  private[this] var _horizontalGroup: Group = _
+  private[this] var _verticalGroup  : Group = _
 
     /** This method is needed for implicit resolution in Scala 2.10 due to some bug (?).
       * It is not needed any more for Scala 2.11
@@ -617,7 +617,7 @@ object GroupPanel {
   // -------------------------
 
   private[this] final class GapImpl(min: Int, pref: Int, max: Int) extends Element {
-    override def toString = if (min == pref && max == pref)
+    override def toString: String = if (min == pref && max == pref)
       s"Gap($pref)"
     else
       s"Gap($min, $pref, $max)"
@@ -634,7 +634,7 @@ object GroupPanel {
   }
 
   private[this] final class PreferredGap(placement: Placement, pref: Int, max: Int) extends Element.Seq {
-    override def toString = {
+    override def toString: String = {
       val placeStr = (placement: @unchecked) match {  // scalac doesn't handle aliasing
         case Placement.Related    => "Related"
         case Placement.Unrelated  => "Unrelated"
