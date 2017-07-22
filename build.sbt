@@ -19,7 +19,7 @@ initialCommands in console :=
   """import de.sciss.swingplus._
     |import scala.swing._""".stripMargin
 
-lazy val scalaSwingVersion = "2.0.0-M2"
+lazy val scalaSwingVersion = "2.0.0"
 
 libraryDependencies in ThisBuild += {
   val sv = scalaVersion.value
