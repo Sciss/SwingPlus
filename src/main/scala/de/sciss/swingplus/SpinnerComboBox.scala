@@ -2,7 +2,7 @@
  *  SpinnerComboBox.scala
  *  (SwingPlus)
  *
- *  Copyright (c) 2013-2014 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2013-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -61,5 +61,6 @@ class SpinnerComboBox[A](value0: A, minimum: A, maximum: A, step: A, items: Seq[
   // ---- init ----
 
   makeEditable()(_ => editor)
-  border = Swing.EmptyBorder(0, 0, 0, 4)
+  value   = value0  // setting combo-box editor seems to reset value to first combo-box item, so undo that here!
+  border  = Swing.EmptyBorder(0, 0, 0, 4)
 }

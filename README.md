@@ -20,7 +20,7 @@ To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.2.3"`
+The current version `v` is `"0.2.4"`
 
 To _compile_ the project, you must currently use JDK 7 or newer. This is because some Java Swing classes were retrofitted with generics, something that the Scala compiler chokes on when using JDK 6. Note however, that SwingPlus __can be used both under JDK 6 and newer__ (that is the entire point of providing our own versions of `ComboBox` and `ListView`).
 

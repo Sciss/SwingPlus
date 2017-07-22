@@ -1,4 +1,4 @@
-// why is this shit package private in Scala-Swing ?!
+// why is this package private in Scala-Swing ?
 
 package de.sciss.swingplus
 
