@@ -1,6 +1,5 @@
 # SwingPlus
 
-[![Flattr this](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=sciss&url=https%3A%2F%2Fgithub.com%2FSciss%2FSwingPlus&title=SwingPlus&language=Scala&tags=github&category=software)
 [![Build Status](https://travis-ci.org/Sciss/SwingPlus.svg?branch=master)](https://travis-ci.org/Sciss/SwingPlus)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.11)
 
