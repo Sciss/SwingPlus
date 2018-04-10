@@ -5,23 +5,31 @@
 
 ## statement
 
-SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.width` and `.height` methods to missing components such as `Spinner` to additional components such `GroupPanel`. It also fixes the incompatibility of certain components with Java 7.
+SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.width` and `.height` methods to
+missing components such as `Spinner` to additional components such `GroupPanel`. It also fixes the incompatibility
+of certain components with Java 7.
 
-SwingPlus is (C)opyright 2013&ndash;2017 Hanns Holger Rutz and released under the [GNU Lesser General Public License](https://raw.github.com/Sciss/SwingPlus/master/LICENSE) v2.1+ and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
+SwingPlus is (C)opyright 2013&ndash;2018 Hanns Holger Rutz and released under
+the [GNU Lesser General Public License](https://raw.github.com/Sciss/SwingPlus/master/LICENSE) v2.1+ and comes
+with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
 
-It contains some classes (e.g. `ComboBox`) derived from the original Scala-Swing package, (C)opyright 2007-2013, LAMP/EPFL, which was released under a BSD style license.
+It contains some classes (e.g. `ComboBox`) derived from the original Scala-Swing package, (C)opyright 2007-2013,
+LAMP/EPFL, which was released under a BSD style license.
 
 ## requirements / installation
 
-This project currently compiles against Scala 2.12, 2.11, 2.10 using sbt 0.13.
+This project currently compiles against Scala 2.12, 2.11, using sbt.
 
 To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.2.4"`
+The current version `v` is `"0.3.0"`
 
-To _compile_ the project, you must currently use JDK 7 or newer. This is because some Java Swing classes were retrofitted with generics, something that the Scala compiler chokes on when using JDK 6. Note however, that SwingPlus __can be used both under JDK 6 and newer__ (that is the entire point of providing our own versions of `ComboBox` and `ListView`).
+To _compile_ the project, you must currently use JDK 7 or newer. This is because some Java Swing classes were
+retrofitted with generics, something that the Scala compiler chokes on when using JDK 6. Note however, that
+SwingPlus __can be used both under JDK 6 and newer__ (that is the entire point of providing our own versions
+of `ComboBox` and `ListView`).
 
 ## contributing
 

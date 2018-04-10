@@ -2,7 +2,7 @@
  *  Implicits.scala
  *  (SwingPlus)
  *
- *  Copyright (c) 2013-2017 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2013-2018 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -13,11 +13,11 @@
 
 package de.sciss.swingplus
 
-import javax.swing.{RowSorter, SortOrder}
+import java.awt.{event => jawte}
+
+import javax.{swing => js}
 
 import scala.swing.{AbstractButton, Action, ButtonGroup, Component, Frame, UIElement}
-import java.awt.{event => jawte}
-import javax.{swing => js}
 
 /** Contains various extension methods for existing Swing components. */
 object Implicits {
@@ -42,22 +42,6 @@ object Implicits {
     def baseline(width: Int, height:Int): Int = component.peer.getBaseline(width, height)
 
     def clientProps: ClientProperties = new ClientProperties(component)
-  }
-
-  // XXX TODO -- remove in major version, as we use swingplus.Table now
-  implicit final class SwingPlusTable(val `this`: swing.Table) extends AnyVal { me =>
-    import me.{`this` => table}
-
-    /** Programmatically sets the sorted column of the table view. */
-    def sort(column: Int, ascending: Boolean = true): Unit = {
-      val sorter = table.peer.getRowSorter
-      if (sorter != null) {
-        val list = new java.util.ArrayList[RowSorter.SortKey](1)
-        list.add(new RowSorter.SortKey(column, if (ascending) SortOrder.ASCENDING else SortOrder.DESCENDING))
-        sorter.setSortKeys(list)
-        // sorter.asInstanceOf[DefaultRowSorter].sort()
-      }
-    }
   }
 
   private final class ActionWrap(peer0: js.Action) extends Action(null) {
