@@ -28,14 +28,13 @@ package de.sciss.swingplus
 **                          |/                                          **
 \*                                                                      */
 
-import javax.swing.event.{ListSelectionListener, ListDataEvent, ListDataListener}
-import javax.swing.{ListModel, JLabel, DefaultListCellRenderer, AbstractListModel, JList, ListCellRenderer, JComponent, ListSelectionModel}
-
-import de.sciss.swingplus.event.{ListSelectionChanged, ListElementsAdded, ListElementsRemoved, ListChanged}
+import javax.swing.event.{ListDataEvent, ListDataListener, ListSelectionListener}
+import javax.swing.{AbstractListModel, DefaultListCellRenderer, JComponent, JLabel, JList, ListCellRenderer, ListModel, ListSelectionModel}
+import de.sciss.swingplus.event.{ListChanged, ListElementsAdded, ListElementsRemoved, ListSelectionChanged}
 
 import scala.collection.mutable
 import scala.swing.Reactions.Reaction
-import scala.swing.{Label, Color, Publisher, Component}
+import scala.swing.{BufferWrapper, Color, Component, Label, Publisher, Seq, SetWrapper}
 
 object ListView {
   /** The supported modes of user selections. */
@@ -56,21 +55,22 @@ object ListView {
 
     def empty[A]: Model[A] with mutable.Buffer[A] = new BufferImpl[A]
 
-    private final class BufferImpl[A] extends Model[A] with mutable.Buffer[A] { m =>
+    private final class BufferImpl[A] extends BufferWrapper[A] with Model[A] { m =>
       private val peer = mutable.Buffer.empty[A]
 
       override def toString() = s"ListView.Model@${hashCode().toHexString}"
 
       def apply(n: Int): A = peer.apply(n)
       def length: Int = peer.length
-      def iterator: Iterator[A] = peer.iterator
 
-      def update(n: Int, newElem: A): Unit = if (peer(n) != newElem) {
+      override def iterator: Iterator[A] = peer.iterator
+
+      override def update(n: Int, newElem: A): Unit = if (peer(n) != newElem) {
         peer.update(n, newElem)
         publish(Model.ElementsChanged(m, n to n))
       }
 
-      def clear(): Unit = if (peer.nonEmpty) {
+      override def clear(): Unit = if (peer.nonEmpty) {
         peer.clear()
         publish(Model.ElementsRemoved(m, peer.indices))
       }
@@ -81,22 +81,25 @@ object ListView {
         res
       }
 
-      def +=: (elem: A): this.type = {
-        peer.+=:(elem)
-        publish(Model.ElementsAdded(m, 0 to 0))
-        this
+      override def insert(idx: Int, elem: A): Unit = {
+        peer.insert(idx, elem)
+        publish(Model.ElementsAdded(m, idx to idx))
       }
 
-      def += (elem: A): this.type = {
+      def addOne(elem: A): this.type = {
         val n = peer.size
         peer += elem
         publish(Model.ElementsAdded(m, n to n))
         this
       }
 
-      def insertAll(n: Int, elems: Traversable[A]): Unit = {
+      override def insertAll(n: Int, elems: MoreElem[A]): Unit = {
+        val sizeBefore    = peer.size
         peer.insertAll(n, elems)
-        publish(Model.ElementsAdded(m, n to (n + elems.size)))
+        val sizeNow       = peer.size
+        val elemsSize     = sizeNow - sizeBefore
+        val elemsNonEmpty = elemsSize > 0
+        if (elemsNonEmpty) publish(Model.ElementsAdded(m, n until (n + elemsSize)))
       }
     }
     
@@ -159,7 +162,7 @@ object ListView {
     final case class ElementsAdded  [+A](source: Model[A], range: Range) extends Change[A]
     final case class ElementsRemoved[+A](source: Model[A], range: Range) extends Change[A]
   }
-  trait Model[+A] extends Seq[A] with Publisher
+  trait Model[+A] extends swing.Seq[A] with Publisher
 
   // ------------------------- Renderer -------------------------
 
@@ -334,7 +337,7 @@ class ListView[A] extends Component {
     publish(ListChanged(ListView.this))
   }
 
-  def items: Seq[A] = model match {
+  def items: swing.Seq[A] = model match {
     case mw: Model.Wrapped[A] => mw.items
     case m => m
   }
@@ -346,11 +349,12 @@ class ListView[A] extends Component {
 
   /** The current item selection. */
   object selection extends Publisher {
-    protected abstract class Indices[B](a: => Seq[B]) extends scala.collection.mutable.Set[B] {
-      def -=(n: B): this.type
-      def +=(n: B): this.type
+    protected abstract class Indices[B](a: => swing.Seq[B]) extends SetWrapper[B] {
+
       def contains(n: B): Boolean = a.contains(n)
+
       override def size: Int = a.length
+
       def iterator: Iterator[B] = a.iterator
     }
 
@@ -358,17 +362,21 @@ class ListView[A] extends Component {
     def anchorIndex: Int = peer.asInstanceOf[JList[A]].getSelectionModel.getAnchorSelectionIndex
 
     /** The indices of the currently selected items. */
-    object indices extends Indices (peer.asInstanceOf[JList[A]].getSelectedIndices) {
-      def -=(n: Int): this.type = { peer.asInstanceOf[JList[A]].removeSelectionInterval(n,n); this }
-      def +=(n: Int): this.type = { peer.asInstanceOf[JList[A]].addSelectionInterval   (n,n); this }
+    object indices extends Indices(peer.asInstanceOf[JList[A]].getSelectedIndices) {
+      def subtractOne (n: Int): this.type = { peer.asInstanceOf[JList[A]].removeSelectionInterval(n,n); this }
+      def addOne      (n: Int): this.type = { peer.asInstanceOf[JList[A]].addSelectionInterval   (n,n); this }
+
+      override def clear(): Unit = peer.asInstanceOf[JList[A]].clearSelection()
     }
 
-    /** The currently selected items. */
-    object items extends scala.collection.SeqProxy[A] {
-      def self: Seq[A] = {
-        val p = peer.asInstanceOf[JList[A]]
-        p.getSelectedValues.map(_.asInstanceOf[A])    // deprecated, but not available in Java 6!
-      }
+    /**
+      * The currently selected items.
+      */
+    def items: Seq[A] = {
+      val p = peer.asInstanceOf[JList[A]]
+      // note: we should be using `getSelectedValuesList`, but it would break the Scala 2.11
+      // promise of working with Java 6 (requires Java 7)
+      p.getSelectedValues.iterator.map(_.asInstanceOf[A]).toSeq
     }
 
     def intervalMode: IntervalMode.Value = IntervalMode(peer.asInstanceOf[JList[A]].getSelectionModel.getSelectionMode)

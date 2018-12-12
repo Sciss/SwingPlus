@@ -28,17 +28,16 @@ package de.sciss.swingplus
 **                          |/                                          **
 \*                                                                      */
 
-import javax.swing.event.{ListDataListener, ListDataEvent}
-import javax.swing.{ListCellRenderer, JComponent, JComboBox, JTextField, ComboBoxModel, AbstractListModel}
+import javax.swing.event.{ListDataEvent, ListDataListener}
+import javax.swing.{AbstractListModel, ComboBoxModel, JComboBox, JComponent, JTextField, ListCellRenderer}
 import java.awt.event.ActionListener
 
 import de.sciss.swingplus.ComboBox.Model
 
-import scala.swing.event.{Event, SelectionChanged, ActionEvent}
-import scala.swing.{Swing, Component, Reactions, Publisher}
+import scala.swing.event.{ActionEvent, Event, SelectionChanged}
+import scala.swing.{BufferWrapper, Component, Publisher, Reactions, Swing}
 import scala.util.control.NonFatal
 import scala.collection.mutable
-
 import scala.language.implicitConversions
 
 object ComboBox {
@@ -164,11 +163,11 @@ object ComboBox {
   // ------------------------- Model-------------------------
 
   object Model {
-    def wrap[A](items: Seq[A]): Model[A] = new Wrapped(items)
+    def wrap[A](items: swing.Seq[A]): Model[A] = new Wrapped(items)
 
     def empty[A]: Model[A] with mutable.Buffer[A] = new BufferImpl[A]
 
-    private final class BufferImpl[A] extends Model[A] with mutable.Buffer[A] { m =>
+    private final class BufferImpl[A] extends BufferWrapper[A] with Model[A] { m =>
       private val peer = mutable.Buffer.empty[A]
 
       override def toString() = s"ComboBox.Model@${hashCode().toHexString}"
@@ -181,15 +180,17 @@ object ComboBox {
       }
 
       def apply(n: Int): A = peer.apply(n)
-      def length: Int = peer.length
-      def iterator: Iterator[A] = peer.iterator
 
-      def update(n: Int, newElem: A): Unit = if (peer(n) != newElem) {
+      def length: Int = peer.length
+
+      override def iterator: Iterator[A] = peer.iterator
+
+      override def update(n: Int, newElem: A): Unit = if (peer(n) != newElem) {
         peer.update(n, newElem)
         publish(Model.ElementsChanged(m, n to n))
       }
 
-      def clear(): Unit = if (peer.nonEmpty) {
+      override def clear(): Unit = if (peer.nonEmpty) {
         selectedItem = None
         peer.clear()
         publish(Model.ElementsRemoved(m, peer.indices))
@@ -205,15 +206,14 @@ object ComboBox {
         res
       }
 
-      def +=: (elem: A): this.type = {
+      override def insert(idx: Int, elem: A): Unit = {
         val wasEmpty = isEmpty
-        peer.+=:(elem)
-        publish(Model.ElementsAdded(m, 0 to 0))
+        peer.insert(idx, elem)
+        publish(Model.ElementsAdded(m, idx to idx))
         if (wasEmpty) selectedItem = Some(elem)
-        this
       }
 
-      def += (elem: A): this.type = {
+      override def addOne(elem: A): this.type = {
         val n = peer.size
         val wasEmpty = n == 0
         peer += elem
@@ -222,21 +222,29 @@ object ComboBox {
         this
       }
 
-      def insertAll(n: Int, elems: Traversable[A]): Unit = {
-        val wasEmpty = isEmpty
+      override def insertAll(n: Int, elems: MoreElem[A]): Unit = {
+        val sizeBefore    = peer.size
+        val wasEmpty      = sizeBefore == 0
         peer.insertAll(n, elems)
-        publish(Model.ElementsAdded(m, n to (n + elems.size)))
-        if (wasEmpty) selectedItem = headOption
+        val sizeNow       = peer.size
+        val elemsSize     = sizeNow - sizeBefore
+        val elemsNonEmpty = elemsSize > 0
+        if (elemsNonEmpty) publish(Model.ElementsAdded(m, n until (n + elemsSize)))
+        if (wasEmpty && elemsNonEmpty) selectedItem = headOption
       }
     }
 
-    private[ComboBox] final class Wrapped[A](val items: Seq[A]) extends Model[A] { m =>
+    private[ComboBox] final class Wrapped[A](val items: swing.Seq[A]) extends Model[A] { m =>
       def length: Int = items.length
+
       def apply(idx: Int): A = items.apply(idx)
+
       def iterator: Iterator[A] = items.iterator
 
       private var _selected = items.headOption
+
       def selectedItem: Option[A] = _selected
+
       def selectedItem_=(a: Option[A]): Unit = if (_selected != a) {
         _selected = a
         publish(Model.SelectionChanged(m))
@@ -367,12 +375,12 @@ class ComboBox[A] extends Component with Publisher {
     // publish(ListChanged(ListView.this))
   }
 
-  def items: Seq[A] = model match {
+  def items: swing.Seq[A] = model match {
     case mw: Model.Wrapped[A] => mw.items
     case m => m
   }
 
-  def items_=(xs: Seq[A]): Unit = model = xs match {
+  def items_=(xs: swing.Seq[A]): Unit = model = xs match {
     case m: Model[A] => m
     case _ => Model.wrap(xs)
   }

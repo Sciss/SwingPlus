@@ -13,12 +13,11 @@
 
 package de.sciss.swingplus
 
-import scala.swing.{Component, Panel}
-
+import javax.swing.{GroupLayout, LayoutStyle}
 import javax.{swing => js}
-import language.implicitConversions
-import javax.swing.{LayoutStyle, GroupLayout}
-import scala.collection.generic.Growable
+
+import scala.language.implicitConversions
+import scala.swing.{Component, Panel}
 
 /** A panel that uses [[javax.swing.GroupLayout]] to visually arrange its components.
   *
@@ -332,7 +331,7 @@ import scala.collection.generic.Growable
   * @author Andreas Flierl
   */
 class GroupPanel extends Panel {
-  import GroupPanel.{Element, Group, Alignment, Placement}
+  import GroupPanel.{Alignment, Element, Group, Placement}
   
   /** This panel's underlying layout manager is a `GroupLayout` instance. */
   val layout = new GroupLayout(peer)
@@ -467,7 +466,7 @@ class GroupPanel extends Panel {
     lazy val peer: GroupLayout#SequentialGroup = layout.createSequentialGroup
 
     object contents extends Growable[Element.Seq] {
-      def +=(elem: Element.Seq): this.type = {
+      def addOne(elem: Element.Seq): this.type = {
         elem.add(layout, peer)
         this
       }
@@ -499,7 +498,7 @@ class GroupPanel extends Panel {
     lazy val peer: GroupLayout#ParallelGroup = layout.createParallelGroup(alignment, resizable)
 
     object contents extends Growable[Element.Par] {
-      def +=(elem: Element.Par): this.type = {
+      def addOne(elem: Element.Par): this.type = {
         elem.add(layout, peer)
         this
       }
