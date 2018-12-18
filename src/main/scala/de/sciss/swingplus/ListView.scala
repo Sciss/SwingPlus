@@ -34,7 +34,7 @@ import de.sciss.swingplus.event.{ListChanged, ListElementsAdded, ListElementsRem
 
 import scala.collection.mutable
 import scala.swing.Reactions.Reaction
-import scala.swing.{BufferWrapper, Color, Component, Label, Publisher, Seq, SetWrapper}
+import scala.swing.{BufferWrapper, Color, Component, Label, Publisher, SetWrapper}
 
 object ListView {
   /** The supported modes of user selections. */
@@ -51,7 +51,7 @@ object ListView {
   // ------------------------- Model-------------------------
 
   object Model {
-    def wrap[A](items: Seq[A]): Model[A] = new Wrapped(items)
+    def wrap[A](items: scala.collection.Seq[A]): Model[A] = new Wrapped(items)
 
     def empty[A]: Model[A] with mutable.Buffer[A] = new BufferImpl[A]
 
@@ -103,7 +103,7 @@ object ListView {
       }
     }
     
-    private[ListView] final class Wrapped[A](val items: Seq[A]) extends Model[A] {
+    private[ListView] final class Wrapped[A](val items: scala.collection.Seq[A]) extends Model[A] {
       def length: Int = items.length
       def apply(idx: Int): A = items.apply(idx)
       def iterator: Iterator[A] = items.iterator
@@ -162,7 +162,7 @@ object ListView {
     final case class ElementsAdded  [+A](source: Model[A], range: Range) extends Change[A]
     final case class ElementsRemoved[+A](source: Model[A], range: Range) extends Change[A]
   }
-  trait Model[+A] extends swing.Seq[A] with Publisher
+  trait Model[+A] extends scala.collection.Seq[A] with Publisher
 
   // ------------------------- Renderer -------------------------
 
@@ -302,7 +302,7 @@ class ListView[A] extends Component {
     setModel(model)
   }
 
-  def this(items: Seq[A]) = {
+  def this(items: scala.collection.Seq[A]) = {
     this()
     this.items = items
   }
@@ -337,19 +337,19 @@ class ListView[A] extends Component {
     publish(ListChanged(ListView.this))
   }
 
-  def items: swing.Seq[A] = model match {
+  def items: scala.collection.Seq[A] = model match {
     case mw: Model.Wrapped[A] => mw.items
     case m => m
   }
 
-  def items_=(xs: Seq[A]): Unit = model = xs match {
+  def items_=(xs: scala.collection.Seq[A]): Unit = model = xs match {
     case m: Model[A] => m
     case _ => Model.wrap(xs)
   }
 
   /** The current item selection. */
   object selection extends Publisher {
-    protected abstract class Indices[B](a: => swing.Seq[B]) extends SetWrapper[B] {
+    protected abstract class Indices[B](a: => scala.collection.Seq[B]) extends SetWrapper[B] {
 
       def contains(n: B): Boolean = a.contains(n)
 
@@ -372,11 +372,11 @@ class ListView[A] extends Component {
     /**
       * The currently selected items.
       */
-    def items: Seq[A] = {
+    def items: scala.collection.Seq[A] = {
       val p = peer.asInstanceOf[JList[A]]
       // note: we should be using `getSelectedValuesList`, but it would break the Scala 2.11
       // promise of working with Java 6 (requires Java 7)
-      p.getSelectedValues.iterator.map(_.asInstanceOf[A]).toSeq
+      p.getSelectedValues.iterator.map(_.asInstanceOf[A]).toIndexedSeq
     }
 
     def intervalMode: IntervalMode.Value = IntervalMode(peer.asInstanceOf[JList[A]].getSelectionModel.getSelectionMode)

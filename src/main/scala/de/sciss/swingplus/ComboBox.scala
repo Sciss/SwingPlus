@@ -163,7 +163,7 @@ object ComboBox {
   // ------------------------- Model-------------------------
 
   object Model {
-    def wrap[A](items: swing.Seq[A]): Model[A] = new Wrapped(items)
+    def wrap[A](items: scala.collection.Seq[A]): Model[A] = new Wrapped(items)
 
     def empty[A]: Model[A] with mutable.Buffer[A] = new BufferImpl[A]
 
@@ -234,7 +234,7 @@ object ComboBox {
       }
     }
 
-    private[ComboBox] final class Wrapped[A](val items: swing.Seq[A]) extends Model[A] { m =>
+    private[ComboBox] final class Wrapped[A](val items: scala.collection.Seq[A]) extends Model[A] { m =>
       def length: Int = items.length
 
       def apply(idx: Int): A = items.apply(idx)
@@ -340,7 +340,7 @@ class ComboBox[A] extends Component with Publisher {
     setModel(model)
   }
 
-  def this(items: Seq[A]) = {
+  def this(items: scala.collection.Seq[A]) = {
     this()
     this.items = items
   }
@@ -375,12 +375,12 @@ class ComboBox[A] extends Component with Publisher {
     // publish(ListChanged(ListView.this))
   }
 
-  def items: swing.Seq[A] = model match {
+  def items: scala.collection.Seq[A] = model match {
     case mw: Model.Wrapped[A] => mw.items
     case m => m
   }
 
-  def items_=(xs: swing.Seq[A]): Unit = model = xs match {
+  def items_=(xs: scala.collection.Seq[A]): Unit = model = xs match {
     case m: Model[A] => m
     case _ => Model.wrap(xs)
   }
