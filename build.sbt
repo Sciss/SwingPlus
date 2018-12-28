@@ -1,10 +1,10 @@
 lazy val baseName  = "SwingPlus"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "0.4.0-SNAPSHOT"
+lazy val projectVersion = "0.4.0"
 lazy val mimaVersion    = "0.4.0"
 
-lazy val scalaSwingVersion = "2.1.0-SNAPSHOT"
+lazy val scalaSwingVersion = "2.1.0"
 
 lazy val root = project.withId(baseNameL).in(file("."))
   .settings(

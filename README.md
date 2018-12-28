@@ -10,7 +10,7 @@ missing components such as `Spinner` to additional components such `GroupPanel`.
 of certain components with Java 7.
 
 SwingPlus is (C)opyright 2013&ndash;2018 Hanns Holger Rutz and released under
-the [GNU Lesser General Public License](https://raw.github.com/Sciss/SwingPlus/master/LICENSE) v2.1+ and comes
+the [GNU Lesser General Public License](https://git.iem.at/sciss/SwingPlus/raw/master/LICENSE) v2.1+ and comes
 with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
 
 It contains some classes (e.g. `ComboBox`) derived from the original Scala-Swing package, (C)opyright 2007-2013,
@@ -73,6 +73,6 @@ They are imported through `swingplus.Implicits._`.
 
 Please also check out the [ScalaSwingContrib](https://github.com/benhutchison/ScalaSwingContrib) project which has similar goals.
 
-Also check out the [TreeTable](https://github.com/Sciss/TreeTable) project which provides a very powerful component, combining tree and table. Ideally this will also go into the mix, but API needs to be properly developed and should negotiate common interface with Ken Scambler's tree implementation.
+Also check out the [TreeTable](https://git.iem.at/sciss/TreeTable) project which provides a very powerful component, combining tree and table. Ideally this will also go into the mix, but API needs to be properly developed and should negotiate common interface with Ken Scambler's tree implementation.
 
-Finally, there is [Desktop](https://github.com/Sciss/Desktop), which aims rather at an application framework based on Swing.
+Finally, there is [Desktop](https://git.iem.at/sciss/Desktop), which aims rather at an application framework based on Swing.
