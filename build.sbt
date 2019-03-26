@@ -1,7 +1,7 @@
 lazy val baseName  = "SwingPlus"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "0.4.0"
+lazy val projectVersion = "0.4.1"
 lazy val mimaVersion    = "0.4.0"
 
 lazy val scalaSwingVersion = "2.1.0"
@@ -11,7 +11,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
     name                := baseName,
     version             := projectVersion,
     organization        := "de.sciss",
-    scalaVersion        := "2.13.0-M5",
+    scalaVersion        := "2.12.8",
     crossScalaVersions  := Seq("2.12.8", "2.11.12", "2.13.0-M5"),
     description         := "The missing bits for Scala-Swing (additional components and methods)",
     homepage            := Some(url(s"https://github.com/Sciss/${name.value}")),

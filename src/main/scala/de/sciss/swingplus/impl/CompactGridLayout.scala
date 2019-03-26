@@ -2,7 +2,7 @@
  *  CompactGridLayout.scala
  *  (SwingPlus)
  *
- *  Copyright (c) 2013-2018 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2013-2019 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -16,8 +16,8 @@ package de.sciss.swingplus.impl
 import java.awt.{Container, Dimension, GridLayout}
 
 /** A variant of `GridLayout` that can be horizontally and/or vertically compacted. */
-class CompactGridLayout(rows: Int, cols: Int, hgap: Int, vgap: Int)
-  extends GridLayout(rows, cols, hgap, vgap) {
+class CompactGridLayout(rows: Int, cols: Int, hgap0: Int, vgap0: Int)
+  extends GridLayout(rows, cols, hgap0, vgap0) {
 
   def this(rows: Int, cols: Int) = this(rows, cols, 0, 0)
 
@@ -105,12 +105,14 @@ class CompactGridLayout(rows: Int, cols: Int, hgap: Int, vgap: Int)
       }
 
       if (mode == 2) {  // layout
-        val pd = preferredLayoutSize(parent)
-        val sx = (1.0 * parent.getWidth ) / pd.width
-        val sy = (1.0 * parent.getHeight) / pd.height
+        val pd    = preferredLayoutSize(parent)
+        val sx    = (1.0 * parent.getWidth ) / pd.width
+        val sy    = (1.0 * parent.getHeight) / pd.height
 
-        var x   = insets.left
-        var ci  = 0
+        var x     = insets.left
+        var ci    = 0
+        val hGap  = getHgap
+        val vGap  = getVgap
         while (ci < cols) {
           var y   = insets.top
           val cw0 = (colWidths(ci) * sx).toInt
@@ -129,10 +131,10 @@ class CompactGridLayout(rows: Int, cols: Int, hgap: Int, vgap: Int)
             if (i < numComp) {
               parent.getComponent(i).setBounds(x, y, cw, rh)
             }
-            y  += rh + vgap
+            y  += rh + vGap
             ri += 1
           }
-          x  += cw + hgap
+          x  += cw + hGap
           ci += 1
         }
         null

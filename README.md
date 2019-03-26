@@ -9,7 +9,7 @@ SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.
 missing components such as `Spinner` to additional components such `GroupPanel`. It also fixes the incompatibility
 of certain components with Java 7.
 
-SwingPlus is (C)opyright 2013&ndash;2018 Hanns Holger Rutz and released under
+SwingPlus is (C)opyright 2013&ndash;2019 Hanns Holger Rutz and released under
 the [GNU Lesser General Public License](https://git.iem.at/sciss/SwingPlus/raw/master/LICENSE) v2.1+ and comes
 with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
 
@@ -24,7 +24,7 @@ To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.4.0"`
+The current version `v` is `"0.4.1"`
 
 To _compile_ the project, you must currently use JDK 7 or newer. This is because some Java Swing classes were
 retrofitted with generics, something that the Scala compiler chokes on when using JDK 6. Note however, that

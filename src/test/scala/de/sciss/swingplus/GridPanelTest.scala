@@ -9,6 +9,8 @@ object GridPanelTest extends SimpleSwingApplication {
 
       contents = new GridPanel(2, 2) {
         compactColumns = true
+        hGap = 8
+        vGap = 4
         contents ++= Seq(
           new Label("Foo:"), new Slider,
           new Label("Bar:"), new Slider { paintTicks = true }
