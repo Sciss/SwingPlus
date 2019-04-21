@@ -24,7 +24,7 @@ To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.4.1"`
+The current version `v` is `"0.4.2"`
 
 To _compile_ the project, you must currently use JDK 7 or newer. This is because some Java Swing classes were
 retrofitted with generics, something that the Scala compiler chokes on when using JDK 6. Note however, that
