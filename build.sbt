@@ -1,7 +1,7 @@
 lazy val baseName  = "SwingPlus"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "0.4.2"
+lazy val projectVersion = "0.4.3-SNAPSHOT"
 lazy val mimaVersion    = "0.4.0"
 
 lazy val scalaSwingVersion = "2.1.1"
@@ -11,10 +11,10 @@ lazy val root = project.withId(baseNameL).in(file("."))
     name                := baseName,
     version             := projectVersion,
     organization        := "de.sciss",
-    scalaVersion        := "2.12.8",
-    crossScalaVersions  := Seq("2.12.8", "2.11.12", "2.13.0-RC1"),
+    scalaVersion        := "2.13.3",
+    crossScalaVersions  := Seq("0.27.0-RC1", "2.13.3", "2.12.12"),
     description         := "The missing bits for Scala-Swing (additional components and methods)",
-    homepage            := Some(url(s"https://github.com/Sciss/${name.value}")),
+    homepage            := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses            := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")),
     scalacOptions      ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
     mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion),
@@ -28,6 +28,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
       val sourceDir = (sourceDirectory in Compile).value
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
+        case Some((0, _))            => sourceDir / "scala-2.13+"
         case _                       => sourceDir / "scala-2.13-"
       }
     }
@@ -49,8 +50,8 @@ lazy val publishSettings = Seq(
   pomIncludeRepository := { _ => false },
   pomExtra := { val n = name.value
 <scm>
-  <url>git@github.com:Sciss/{n}.git</url>
-  <connection>scm:git:git@github.com:Sciss/{n}.git</connection>
+  <url>git@git.iem.at:sciss/{n}.git</url>
+  <connection>scm:git:git@git.iem.at:sciss/{n}.git</connection>
 </scm>
 <developers>
   <developer>
