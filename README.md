@@ -1,16 +1,15 @@
 # SwingPlus
 
-[![Build Status](https://travis-ci.org/Sciss/SwingPlus.svg?branch=master)](https://travis-ci.org/Sciss/SwingPlus)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.11)
+[![Build Status](https://travis-ci.org/Sciss/SwingPlus.svg?branch=main)](https://travis-ci.org/Sciss/SwingPlus)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/swingplus_2.13)
 
 ## statement
 
 SwingPlus tries to fill in the holes left behind by Scala-Swing. From missing `.width` and `.height` methods to
-missing components such as `Spinner` to additional components such `GroupPanel`. It also fixes the incompatibility
-of certain components with Java 7.
+missing components such as `Spinner` to additional components such `GroupPanel`.
 
-SwingPlus is (C)opyright 2013&ndash;2019 Hanns Holger Rutz and released under
-the [GNU Lesser General Public License](https://git.iem.at/sciss/SwingPlus/raw/master/LICENSE) v2.1+ and comes
+SwingPlus is (C)opyright 2013&ndash;2020 Hanns Holger Rutz and released under
+the [GNU Lesser General Public License](https://git.iem.at/sciss/SwingPlus/raw/main/LICENSE) v2.1+ and comes
 with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
 
 It contains some classes (e.g. `ComboBox`) derived from the original Scala-Swing package, (C)opyright 2007-2013,
@@ -18,18 +17,13 @@ LAMP/EPFL, which was released under a BSD style license.
 
 ## requirements / installation
 
-This project currently compiles against Scala 2.12, 2.11, using sbt.
+This project builds with sbt against Scala 2.13, 2.12, Dotty.
 
 To use the library in your project:
 
     "de.sciss" %% "swingplus" % v
 
-The current version `v` is `"0.4.2"`
-
-To _compile_ the project, you must currently use JDK 7 or newer. This is because some Java Swing classes were
-retrofitted with generics, something that the Scala compiler chokes on when using JDK 6. Note however, that
-SwingPlus __can be used both under JDK 6 and newer__ (that is the entire point of providing our own versions
-of `ComboBox` and `ListView`).
+The current version `v` is `"0.5.0"`
 
 ## contributing
 

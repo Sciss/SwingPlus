@@ -2,7 +2,7 @@
  *  GroupPanel.scala
  *  (SwingPlus)
  *
- *  Copyright (c) 2013-2019 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2013-2020 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -487,13 +487,11 @@ class GroupPanel extends Panel {
     }
   }
   class Par(alignment: Alignment, resizable: Boolean) extends Group {
-    def this(alignment: Alignment) {
+    def this(alignment: Alignment) =
       this(alignment, true)
-    }
 
-    def this() {
+    def this() =
       this(Alignment.Leading)
-    }
 
     lazy val peer: GroupLayout#ParallelGroup = layout.createParallelGroup(alignment, resizable)
 

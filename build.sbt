@@ -1,10 +1,10 @@
 lazy val baseName  = "SwingPlus"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "0.4.3-SNAPSHOT"
-lazy val mimaVersion    = "0.4.0"
+lazy val projectVersion = "0.5.0"
+lazy val mimaVersion    = "0.5.0"
 
-lazy val scalaSwingVersion = "2.1.1"
+lazy val scalaSwingVersion = "3.0.0"
 
 lazy val root = project.withId(baseNameL).in(file("."))
   .settings(
@@ -12,7 +12,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
     version             := projectVersion,
     organization        := "de.sciss",
     scalaVersion        := "2.13.3",
-    crossScalaVersions  := Seq("0.27.0-RC1", "2.13.3", "2.12.12"),
+    crossScalaVersions  := Seq("3.0.0-M1", "2.13.3", "2.12.12"),
     description         := "The missing bits for Scala-Swing (additional components and methods)",
     homepage            := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses            := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")),
@@ -28,7 +28,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
       val sourceDir = (sourceDirectory in Compile).value
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
-        case Some((0, _))            => sourceDir / "scala-2.13+"
+        case Some((3, _))            => sourceDir / "scala-2.13+"
         case _                       => sourceDir / "scala-2.13-"
       }
     }

@@ -14,7 +14,7 @@ trait LazyPublisher extends Publisher {
   protected def onLastUnsubscribe(): Unit
 
   override def subscribe(listener: Reaction): Unit = {
-    if(listeners.size == 1) onFirstSubscribe()
+    if (listeners.size == 1) onFirstSubscribe()
     // another frickin private method
     // super.subscribe(listener)
     listeners += listener
@@ -24,6 +24,6 @@ trait LazyPublisher extends Publisher {
     // another frickin private method
     // super.unsubscribe(listener)
     listeners -= listener
-    if(listeners.size == 1) onLastUnsubscribe()
+    if (listeners.size == 1) onLastUnsubscribe()
   }
 }
