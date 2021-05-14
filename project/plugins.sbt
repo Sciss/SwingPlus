@@ -1,3 +1,2 @@
-addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.8.1")  // compatibility testing
-addSbtPlugin("ch.epfl.lamp" % "sbt-dotty"       % "0.5.3")  // cross-compile for dotty
+addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.9.1")  // compatibility testing
 
